@@ -1,0 +1,27 @@
+plugins {
+    id "application"
+}
+
+dependencies {
+    implementation(project(":common:core"))
+    implementation(project(":common:config"))
+    implementation(project(":common:log4j2"))
+    implementation(project(":common:redis"))
+    implementation(project(":common:rabbit"))
+    implementation(project(":iot-lib:codec:attendance"))
+    implementation("io.vertx:vertx-web")
+}
+
+var launcherClassName = "com.zclcs.IotGatewayVerticle"
+
+application {
+    mainClass = launcherClassName
+}
+
+shadowJar {
+    archiveClassifier = "fat"
+
+    archiveBaseName.set("iot-gateway")
+
+    mergeServiceFiles()
+}

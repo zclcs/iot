@@ -1,0 +1,87 @@
+buildscript {
+    ext {
+        vertxVersion = "4.5.0"
+        shadowJarVersion = "7.1.2"
+        log4j2Version = "2.22.0"
+        slf4jVersion = "2.0.9"
+        disruptorVersion = "3.4.2"
+        lombokVersion = "1.18.30"
+        caffeineVersion = "3.1.5"
+        jacksonVersion = "2.15.3"
+    }
+}
+
+plugins {
+    id 'base'
+    id "com.github.johnrengelman.shadow" version "$shadowJarVersion" apply false
+}
+
+ext {
+    javaVersion = JavaVersion.VERSION_21
+    bom = Set.of(project(":iot-bom"), project(":platform"), project(":common"), project(":iot-lib"), project(":iot-lib:codec"))
+    applicationPackage = Set.of(project(":platform:gateway"), project(":platform:emulator"))
+    commons = (subprojects - bom)
+}
+
+subprojects {
+    group = group
+    version = version
+
+    repositories {
+        mavenLocal()
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url "https://maven.aliyun.com/repository/spring" }
+        maven { url "https://maven.aliyun.com/repository/spring-plugin" }
+        maven { url "https://repo.spring.io/release" }
+        maven { url "https://repo.spring.io/milestone" }
+        mavenCentral()
+    }
+}
+
+configure(commons) {
+    apply plugin: "java-library"
+    sourceCompatibility = "$javaVersion"
+    targetCompatibility = "$javaVersion"
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+
+    configurations {
+        management {
+            canBeConsumed = false
+            canBeResolved = false
+            visible = false
+        }
+        compileClasspath.extendsFrom(management)
+        testCompileClasspath.extendsFrom(management)
+        runtimeClasspath.extendsFrom(management)
+        testRuntimeClasspath.extendsFrom(management)
+        annotationProcessor.extendsFrom(management)
+        testAnnotationProcessor.extendsFrom(management)
+    }
+
+    dependencies {
+        // import BOM.
+        management platform("io.vertx:vertx-stack-depchain:$vertxVersion")
+        management platform(project(":iot-bom"))
+        compileOnly "org.projectlombok:lombok"
+        annotationProcessor "org.projectlombok:lombok"
+    }
+
+    compileJava.options.compilerArgs.add '-parameters'
+    compileTestJava.options.compilerArgs.add '-parameters'
+    compileJava.dependsOn(processResources)
+}
+
+
+configure(applicationPackage) {
+    apply plugin: "java"
+    apply plugin: "com.github.johnrengelman.shadow"
+    sourceCompatibility = "$javaVersion"
+    targetCompatibility = "$javaVersion"
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+}

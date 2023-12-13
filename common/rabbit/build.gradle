@@ -1,0 +1,6 @@
+dependencies {
+    implementation(project(":common:core"))
+    implementation(project(":common:config"))
+    implementation(project(":common:log4j2"))
+    api("io.vertx:vertx-rabbitmq-client")
+}

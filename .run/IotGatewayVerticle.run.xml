@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="IotGatewayVerticle" type="Application" factoryName="Application">
+    <option name="ALTERNATIVE_JRE_PATH" value="corretto-21" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <envs>
+      <env name="NACOS_NAMESPACE" value="xnsmz" />
+      <env name="REDIS_HOST" value="192.168.3.190" />
+      <env name="REDIS_PASSWORD" value="" />
+      <env name="RABBITMQ_HOST" value="192.168.3.190" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="com.zclcs.IotGatewayVerticle" />
+    <module name="iot.platform.gateway.main" />
+    <option name="VM_PARAMETERS" value="-Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.Log4j2LogDelegateFactory -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector -Dlog4j2.asyncQueueFullPolicy=Discard -Dlog4j2.discardThreshold=INFO" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

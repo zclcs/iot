@@ -1,0 +1,6 @@
+dependencies {
+    implementation(project(":common:core"))
+    api("org.slf4j:slf4j-api")
+    api("org.apache.logging.log4j:log4j-slf4j2-impl")
+    api("com.lmax:disruptor")
+}

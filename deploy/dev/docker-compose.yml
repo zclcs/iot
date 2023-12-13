@@ -1,0 +1,22 @@
+version: '3.4'
+services:
+  test:
+    image: ${CLOUD_DEPOSITORY_IP_PORT}${CLOUD_DEPOSITORY_URL}/test:${CLOUD_DEPOSITORY_TAG}
+    container_name: test
+    network_mode: host
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -sS ${LOCAL_HOST_IP}:8888 || exit 1" ]
+      interval: ${DOCKER_HEALTHCHECK_INTERVAL}
+      timeout: ${DOCKER_HEALTHCHECK_TIMEOUT}
+      retries: ${DOCKER_HEALTHCHECK_RETRIES}
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+        reservations:
+          memory: 512M
+    env_file: .env
